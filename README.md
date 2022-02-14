@@ -1,4 +1,4 @@
-# Hedgehog
+# binanceBot
 
 **TODO: Add description**
 
