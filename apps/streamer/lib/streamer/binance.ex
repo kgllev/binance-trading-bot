@@ -20,6 +20,12 @@ defmodule Streamer.Binance do
     {:ok, state}
   end
 
+  def handle_cast({send, {type, msg} = frame}, state) do
+    IO.puts("Sending #{type} frame with payload: #{msg}")
+    {:reply, frame, state}
+  end
+
+  ## Private functions
   defp process_event(%{"e" => "trade"} = event) do
     trade_event = %Streamer.Binance.TradeEvent{
       :event_type => event["e"],
@@ -34,11 +40,7 @@ defmodule Streamer.Binance do
       :buyer_market_marker => event["m"]
     }
 
+    Naive.send_event(event)
     Logger.debug("Trade event received " <> "#{trade_event.symbol}@#{trade_event.price}")
-  end
-
-  def handle_cast({send, {type, msg} = frame}, state) do
-    IO.puts("Sending #{type} frame with payload: #{msg}")
-    {:reply, frame, state}
   end
 end
